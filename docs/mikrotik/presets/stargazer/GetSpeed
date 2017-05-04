@@ -2,21 +2,22 @@
 <?php
 $login=$argv[1];
 $config=parse_ini_file(dirname(__FILE__)."/config");
-$loginDB = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
+$link = mysql_connect($config['host'], $config['username'], $config['password']);
+mysql_select_db($config['database']);
 $query = 'SELECT `speed` FROM `userspeeds` where `login`= "'.$login.'"';
-$result = $loginDB->query($query);
-while ($line = mysqli_fetch_assoc($result)) {
+$result = mysql_query($query);
+while ($line = mysql_fetch_array($result, MYSQL_ASSOC)) {
 foreach ($line as $col_value) {
 if ($col_value) {
  print ($col_value);
   } else {
  $tarq='SELECT `Tariff` FROM users WHERE `login`="'.$login.'"';
- $tar=$loginDB->query($tarq);
-           while ($line2 = mysqli_fetch_assoc($tar)) {
+ $tar=mysql_query($tarq);
+           while ($line2 = mysql_fetch_array($tar, MYSQL_ASSOC)) {
                 foreach($line2 as $tarval) {
                                 $speedq='SELECT `speeddown` from `speeds` WHERE `tariff`="'.$tarval.'"';
-                                $speed=$loginDB->query($speedq);
-                                   while ($line3 = mysqli_fetch_assoc($speed)) {
+                                $speed=mysql_query($speedq);
+                                   while ($line3 = mysql_fetch_array($speed, MYSQL_ASSOC)) {
                                    foreach($line3 as $speedval) {
                                    print($speedval);
                                    }

@@ -2,14 +2,15 @@
 <?php
 $login=$argv[1];
 $config=parse_ini_file(dirname(__FILE__)."/config");
-$loginDB = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
+$link = mysql_connect($config['host'], $config['username'], $config['password']);
+mysql_select_db($config['database']);
 $ipq='SELECT `IP` FROM `users` WHERE `login`="'.$login.'"';
-$ip=$loginDB->query($ipq);
-           while ($line2 = mysqli_fetch_assoc($ip)) {
+$ip=mysql_query($ipq);
+           while ($line2 = mysql_fetch_array($ip, MYSQL_ASSOC)) {
                 foreach($line2 as $ipval) {
                                 $macq='SELECT `mac` from `nethosts` WHERE `ip`="'.$ipval.'"';
-                                $mac=$loginDB->query($macq);
-                                   while ($line3 = mysqli_fetch_assoc($mac)) {
+                                $mac=mysql_query($macq);
+                                   while ($line3 = mysql_fetch_array($mac, MYSQL_ASSOC)) {
                                    foreach($line3 as $macval) {
                                    print($macval);
                                    }
