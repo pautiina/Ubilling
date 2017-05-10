@@ -861,7 +861,7 @@ $lang['def']['Macro'] = 'Макро';
 $lang['def']['Micro'] = 'Микро';
 $lang['def']['Nano'] = 'Нано';
 $lang['def']['support tickets expected processing'] = 'заявок хелпдеска ожидают обработки';
-$lang['def']['You know, we really would like to let you perform this action, but his conscience does not allow us to do'] = 'Знаете, нам очень бы хотелось позволить вам совершить это действие, но совесть не разрешает нам этого сделать :(';
+$lang['def']['You know, we really would like to let you perform this action, but our conscience does not allow us to do'] = 'Знаете, нам очень бы хотелось позволить вам совершить это действие, но совесть не разрешает нам этого сделать :(';
 $lang['def']['Mass sender use ticketing'] = 'Массовая рассылка использует для работы хелпдеск';
 $lang['def']['Enabled arpdiag module'] = 'Модуль ARPдиагностики включен';
 $lang['def']['Administrators can set the size of icons on their own'] = 'Администраторы могут самостоятельно выбирать размер иконок';
@@ -2416,11 +2416,31 @@ $lang['def']['Contract duplicate'] = 'Дубликат договора';
 $lang['def']['Empty address'] = 'Пустой адрес';
 $lang['def']['Empty contract'] = 'Пустой договор';
 $lang['def']['No tags'] = 'Без тегов';
+$lang['def']['Current year'] = 'Текущий год';
+$lang['def']['Branch'] = 'Филиал';
+$lang['def']['Payments by month'] = 'Оплаты за месяц';
+$lang['def']['Distance'] = 'Расстояние';
+$lang['def']['Unknown ONU'] = 'Неизвестные ONU';
+$lang['def']['Register new ONU'] = 'Зарегистрировать новую ONU';
+$lang['def']['No branches available'] = 'Нету существующих филиалов';
+$lang['def']['New branch name'] = 'Имя нового филиала';
+$lang['def']['right to use branches module'] = 'Право использовать модуль филиалов';
+$lang['def']['right to control branches configuration'] = 'Право конфигурировать филиалы';
+$lang['def']['Branches'] = 'Филиалы';
+$lang['def']['Branches enabled'] = 'Филиалы включены';
+$lang['def']['ONU reboot from vlans control module'] = 'Перезагрузка ONU из модуля управления вланами';
+$lang['def']['ONU describe from vlans control module'] = 'Описание ONU из модуля управления вланами';
+$lang['def']['No branches admins available'] = 'Нету привязок администраторов к филиалам';
+$lang['def']['Administrators'] = 'Администраторы';
+$lang['def']['Transaction'] = 'Транзакция';
+$lang['def']['Non existent transaction ID'] = 'Несуществующий идентификатор транзакции';
+$lang['def']['Penalty percent from tariff\'s fee'] = 'Штраф в размере процента от стоимости тарифа';
 $lang['def'][''] = '';
 $lang['def'][''] = '';
 $lang['def'][''] = '';
-
-
+$lang['def'][''] = '';
+$lang['def'][''] = '';
+$lang['def'][''] = '';
 
 
 ?>

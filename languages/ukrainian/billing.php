@@ -863,7 +863,7 @@ $lang['def']['Macro'] = 'Макро';
 $lang['def']['Micro'] = 'Мікро';
 $lang['def']['Nano'] = 'Нано';
 $lang['def']['support tickets expected processing'] = 'заявок хелпдеску очікують обробки';
-$lang['def']['You know, we really would like to let you perform this action, but his conscience does not allow us to do'] = 'Знаєте, нам дуже б хотілося дозволити вам вчинити цю дію, але совість не дозволяє нам цього зробити :(';
+$lang['def']['You know, we really would like to let you perform this action, but our conscience does not allow us to do'] = 'Знаєте, нам дуже б хотілося дозволити вам вчинити цю дію, але совість не дозволяє нам цього зробити :(';
 $lang['def']['Mass sender use ticketing'] = 'Масове розсилання використовує для роботи хелпдеск';
 $lang['def']['Enabled arpdiag module'] = 'Модуль ARPдіагностики увімкнено';
 $lang['def']['Administrators can set the size of icons on their own'] = 'Адміністратори можуть самостійно обирати розмір іконок';
@@ -2431,6 +2431,24 @@ $lang['def']['Contract duplicate'] = 'Дублікат угоди';
 $lang['def']['Empty address'] = 'Порожня адреса';
 $lang['def']['Empty contract'] = 'Порожня угода';
 $lang['def']['No tags'] = 'Без тегів';
-
+$lang['def']['Current year'] = 'Поточний рік';
+$lang['def']['Branch'] = 'Філія';
+$lang['def']['Payments by month'] = 'Оплати за місяць';
+$lang['def']['Distance'] = 'Відстань';
+$lang['def']['Unknown ONU'] = 'Невідомі ONU';
+$lang['def']['Register new ONU'] = 'Зареєструвати нову ONU';
+$lang['def']['No branches available'] = 'Немає існуючих філій';
+$lang['def']['New branch name'] = 'Ім`я нового філії';
+$lang['def']['right to use branches module'] = 'Право використовувати модуль філій';
+$lang['def']['right to control branches configuration'] = 'Право конфігурувати філії';
+$lang['def']['Branches'] = 'Філії';
+$lang['def']['Branches enabled'] = 'Філії увімкнено';
+$lang['def']['ONU reboot from vlans control module'] = 'Перезавантаження ONU з модулю керування вланами';
+$lang['def']['ONU describe from vlans control module'] = 'Опис ONU з модулю керування вланами';
+$lang['def']['No branches admins available'] = 'Немає ассоційованих з філіями адміністраторів';
+$lang['def']['Administrators'] = 'Адміністратори';
+$lang['def']['Transaction'] = 'Транзакція';
+$lang['def']['Non existent transaction ID'] = 'Неіснуючий ідентифікатор транзакції';
+$lang['def']['Penalty percent from tariff\'s fee'] = 'Штраф у розмірі відсотка від вартості тарифу';
 
 ?>

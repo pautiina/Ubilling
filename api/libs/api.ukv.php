@@ -2112,7 +2112,7 @@ class UkvSystem {
         $query = "SELECT * from `ukv_banksta` WHERE `id`='" . $id . "'";
         $dataRaw = simple_query($query);
         $result = '';
-        $result.= wf_Link(self::URL_BANKSTA_PROCESSING . $dataRaw['hash'], __('Back'), false, 'ubButton');
+        $result.= wf_BackLink(self::URL_BANKSTA_PROCESSING . $dataRaw['hash']);
         $result.= wf_delimiter();
 
         if (!empty($dataRaw)) {
@@ -3198,6 +3198,8 @@ class UkvSystem {
         $showYear = (wf_CheckPost(array('showyear'))) ? vf($_POST['showyear'], 3) : curyear();
         $showMonth = (wf_CheckGet(array('month'))) ? mysql_real_escape_string($_GET['month']) : curmonth();
         $yearCount = 0;
+        $displayCount = 0;
+        $displayTmp = array();
 
         if (!empty($this->users)) {
             foreach ($this->users as $io => $each) {
@@ -3265,19 +3267,30 @@ class UkvSystem {
             foreach ($regdates as $eachRegDate => $eachRegUsers) {
                 if (ispos($eachRegDate, $showMonth)) {
                     foreach ($eachRegUsers as $ix => $eachUserId) {
-                        $cells = wf_TableCell($eachUserId);
-                        $cells.= wf_TableCell($this->users[$eachUserId]['regdate']);
-                        $userLink = wf_Link(self::URL_USERS_PROFILE . $eachUserId, web_profile_icon() . ' ', false);
-                        $cells.= wf_TableCell($userLink . $this->userGetFullAddress($eachUserId));
-                        $cells.= wf_TableCell($this->users[$eachUserId]['realname']);
-                        $cells.= wf_TableCell(@$this->tariffs[$this->users[$eachUserId]['tariffid']]['tariffname']);
-                        $rows.= wf_TableRow($cells, 'row3');
+                        $displayTmp[] = $eachUserId;
+                        
                     }
                 }
             }
         }
 
+        if (!empty($displayTmp)) {
+            rsort($displayTmp);
+            foreach ($displayTmp as $ix => $eachUserId) {
+                $cells = wf_TableCell($eachUserId);
+                $cells.= wf_TableCell($this->users[$eachUserId]['regdate']);
+                $userLink = wf_Link(self::URL_USERS_PROFILE . $eachUserId, web_profile_icon() . ' ', false);
+                $cells.= wf_TableCell($userLink . $this->userGetFullAddress($eachUserId));
+                $cells.= wf_TableCell($this->users[$eachUserId]['realname']);
+                $cells.= wf_TableCell(@$this->tariffs[$this->users[$eachUserId]['tariffid']]['tariffname']);
+                $rows.= wf_TableRow($cells, 'row3');
+                $displayCount++;
+            }
+        }
+
         $result = wf_TableBody($rows, '100%', '0', 'sortable');
+        $result.= __('Total') . ': ' . $displayCount;
+
         if ($showMonth == curmonth()) {
             $monthTitle = __('Current month user signups');
         } else {

@@ -150,6 +150,7 @@ CAP_ENABLED=TRIGGER|Crime and punishment enabled
 CAP_DAYLIMIT=VARCHAR|Days limit to push penalty
 CAP_PENALTY=VARCHAR|Penalty cash summ
 CAP_PAYID=VARCHAR|Payment type
+CAP_PENALTY_PERCENT=VARCHAR|Penalty percent from tariff's fee
 CAP_IGNOREFROZEN=TRIGGER|Do not call Raskolnikov frozen
 CHAPTEREND_DOSTOEVSKY=true
 
@@ -277,6 +278,9 @@ TASKREPORT_JOBTYPES=VARCHAR|Tasks jobtype IDs for report
 TASKREPORT_SIGNUPJOBTYPES=VARCHAR|Tasks jobtype IDs of signup type
 TASKREPORT_NOTESTAGIDS=VARCHAR|Notes tag IDs which will be task notes
 TASKREPORT_SIGPAYID=VARCHAR|Signup payments cashtype ID
+BRANCHES_ENABLED=TRIGGER|Branches enabled
+ONUAUTO_CONFIG_REBOOT=TRIGGER|ONU reboot from vlans control module
+ONUAUTO_CONFIG_DESCRIBE=TRIGGER|ONU describe from vlans control module
 CHAPTEREND_BEH=true
 
 

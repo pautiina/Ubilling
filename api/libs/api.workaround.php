@@ -1470,7 +1470,7 @@ function web_DirectionsEditForm($ruleid) {
     $editinputs = wf_TextInput('editrulename', 'Rule name', $ruledata['rulename'], true, '20');
     $editinputs.=wf_Submit('Save');
     $editform = wf_Form("", 'POST', $editinputs, 'glamour');
-    $editform.=wf_Link('?module=rules', 'Back', true, 'ubButton');
+    $editform.=wf_BackLink('?module=rules');
     show_window(__('Edit') . ' ' . __('Rule name'), $editform);
 }
 
@@ -2836,7 +2836,8 @@ function web_UserArrayShower($usersarr) {
         $result = wf_TableBody($tablerows, '100%', '0', 'sortable');
         $result.= wf_tag('b') . __('Total') . ': ' . wf_tag('b', true) . sizeof($usersarr);
     } else {
-        $result = __('Any users found');
+        $messages = new UbillingMessageHelper();
+        $result = $messages->getStyledMessage(__('Any users found'), 'info');
     }
 
     return ($result);
@@ -4457,6 +4458,10 @@ function zb_xml2array($contents, $get_attributes = 1, $priority = 'tag') {
 
     if (!$xml_values)
         return; //Hmm...
+
+
+
+
 
 
 

@@ -3,7 +3,11 @@
 /*
  * Including all needed APIs and Libs
  */
-include('api/libs/api.mysql.php');
+if (extension_loaded('mysqli')) {
+    include('api/libs/api.mysqli.php');
+} else {
+    include('api/libs/api.mysql.php');
+}
 include('api/libs/api.ubstorage.php');
 include('api/api.stargazer.php');
 include('api/libs/api.compat.php');
@@ -93,6 +97,7 @@ include('api/libs/api.senddog.php');
 include('api/libs/api.smszilla.php');
 include('api/libs/api.tsupport.php');
 include('api/libs/api.policedog.php');
+include('api/libs/api.branches.php');
 
 /*
  * Initial class creation
@@ -100,4 +105,15 @@ include('api/libs/api.policedog.php');
 $billing = new ApiBilling();
 $db = new MySQLDB();
 $ubillingConfig = new UbillingConfig();
+
+
+/**
+ * Branches access control 
+ */
+$globalAlter = $ubillingConfig->getAlter();
+if (@$globalAlter['BRANCHES_ENABLED']) {
+    $branchControl = new UbillingBranches();
+    $branchControl->accessControl();
+}
+    
 

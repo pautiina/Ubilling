@@ -8,12 +8,14 @@ class OpenPayz {
     protected $altCfg = array();
     protected $allAddress = array();
     protected $allRealnames = array();
+    protected $messages = '';
 
     const URL_AJAX_SOURCE = '?module=openpayz&ajax=true';
     const URL_CHARTS = '?module=openpayz&graphs=true';
 
     public function __construct() {
         $this->loadAlter();
+        $this->initMessages();
         $this->loadCustomers();
         $this->loadTransactions();
         $this->loadPaySys();
@@ -106,6 +108,15 @@ class OpenPayz {
                 $this->allPaySys[$each['paysys']] = $each['paysys'];
             }
         }
+    }
+
+    /**
+     * Inits system messages helper
+     * 
+     * @return voids
+     */
+    protected function initMessages() {
+        $this->messages = new UbillingMessageHelper();
     }
 
     /**
@@ -212,6 +223,7 @@ class OpenPayz {
     public function renderGraphs() {
         $psysdata = array();
         $gcAllData = array();
+        $gcYearData = array();
         $gcMonthData = array();
         $gchartsData = array();
 
@@ -231,11 +243,12 @@ class OpenPayz {
                         trigger: 'none'
                     },";
 
-        $result = wf_Link('?module=openpayz', __('Back'), true, 'ubButton');
+        $result = wf_BackLink('?module=openpayz', '', true);
         if (!empty($this->allTransactions)) {
             foreach ($this->allTransactions as $io => $each) {
                 $timestamp = strtotime($each['date']);
                 $curMonth = curmonth();
+                $curYear = curyear();
                 $date = date("Y-m", $timestamp);
                 if (isset($psysdata[$each['paysys']][$date]['count'])) {
                     $psysdata[$each['paysys']][$date]['count'] ++;
@@ -252,6 +265,15 @@ class OpenPayz {
                     $gcAllData[$each['paysys']] = 1;
                 }
 
+                //current year stats
+                if (ispos($date, $curYear)) {
+                    if (isset($gcYearData[$each['paysys']])) {
+                        $gcYearData[$each['paysys']] ++;
+                    } else {
+                        $gcYearData[$each['paysys']] = 1;
+                    }
+                }
+
                 //current month stats
                 if (ispos($date, $curMonth)) {
                     if (isset($gcMonthData[$each['paysys']])) {
@@ -265,18 +287,25 @@ class OpenPayz {
         $chartOpts = "chartArea: {  width: '90%', height: '90%' }, legend : {position: 'right'}, ";
 
         if (!empty($gcAllData)) {
-            $gcAllPie = wf_gcharts3DPie($gcAllData, __('All time'), '400px', '400px', $chartOpts);
+            $gcAllPie = wf_gcharts3DPie($gcAllData, __('All time'), '300px', '300px', $chartOpts);
         } else {
             $gcAllPie = '';
         }
 
         if (!empty($gcMonthData)) {
-            $gcMonthPie = wf_gcharts3DPie($gcMonthData, __('Current month'), '400px', '400px', $chartOpts);
+            $gcMonthPie = wf_gcharts3DPie($gcMonthData, __('Current month'), '300px', '300px', $chartOpts);
         } else {
             $gcMonthPie = '';
         }
 
+        if (!empty($gcYearData)) {
+            $gcYearPie = wf_gcharts3DPie($gcYearData, __('Current year'), '300px', '300px', $chartOpts);
+        } else {
+            $gcYearPie = '';
+        }
+
         $gcells = wf_TableCell($gcAllPie);
+        $gcells.= wf_TableCell($gcYearPie);
         $gcells.= wf_TableCell($gcMonthPie);
         $grows = wf_TableRow($gcells);
         $result.=wf_TableBody($grows, '100%', 0, '');
@@ -343,74 +372,54 @@ class OpenPayz {
      * Retruns json data for jquery data tables with transactions list
      * 
      * @global object $ubillingConfig
-     * @return string
+     * 
+     * @return void
      */
     public function transactionAjaxSource() {
         $manual_mode = $this->altCfg['OPENPAYZ_MANUAL'];
         $query = "SELECT * from `op_transactions` ORDER by `id` DESC;";
         $alltransactions = simple_queryall($query);
-        $result = '{ 
-                  "aaData": [ ';
+        $json = new wf_JqDtHelper();
 
 
         if (!empty($alltransactions)) {
             foreach ($alltransactions as $io => $eachtransaction) {
+                $control = '';
+
                 if ($manual_mode) {
                     if ($eachtransaction['processed'] == 0) {
-                        $control = wf_Link('?module=openpayz&process=' . $eachtransaction['id'], web_add_icon('Payment'));
-                        $control = str_replace('"', '', $control);
-                        $control = trim($control);
-                    } else {
-                        $control = '';
+                        $control.= ' ' . wf_Link('?module=openpayz&process=' . $eachtransaction['id'], web_add_icon('Payment'));
                     }
-                } else {
-                    $control = '';
                 }
 
                 @$user_login = $this->allCustomers[$eachtransaction['customerid']];
                 @$user_realname = $this->allRealnames[$user_login];
-                $user_realname = str_replace('"', '', $user_realname);
-                $user_realname = str_replace('\\', '', $user_realname);
-                $user_realname = trim($user_realname);
-
                 @$user_address = $this->allAddress[$user_login];
-                $user_address = trim($user_address);
-                $user_address = str_replace("'", '`', $user_address);
-                $user_address = mysql_real_escape_string($user_address);
-
 
                 if (!empty($user_login)) {
                     $profileLink = wf_Link('?module=userprofile&username=' . $user_login, web_profile_icon());
-                    $profileLink = str_replace('"', '', $profileLink);
-                    $profileLink = trim($profileLink);
                 } else {
                     $profileLink = '';
                 }
 
                 $stateIcon = web_bool_led($eachtransaction['processed']);
-                $stateIcon = str_replace('"', '', $stateIcon);
-                $stateIcon = trim($stateIcon) . ' ' . $control;
+                $detailsControl = ' ' . wf_Link('?module=openpayz&showtransaction=' . $eachtransaction['id'], $eachtransaction['id']);
+                $data[] = $detailsControl;
+                $data[] = $eachtransaction['date'];
+                $data[] = $eachtransaction['summ'];
+                $data[] = $eachtransaction['customerid'];
+                $data[] = $user_realname;
+                $data[] = $profileLink . ' ' . $user_address;
+                $data[] = $eachtransaction['paysys'];
+                $data[] = $stateIcon . $control;
 
-
-                $result.='
-                    [
-                    "' . $eachtransaction['id'] . '",
-                    "' . $eachtransaction['date'] . '",
-                    "' . $eachtransaction['summ'] . '",
-                    "' . $eachtransaction['customerid'] . '",
-                    "' . $user_realname . '",
-                    "' . $profileLink . ' ' . $user_address . '",
-                    "' . $eachtransaction['paysys'] . '",
-                    "' . $stateIcon . '"
-                    ],';
+                $json->addRow($data);
+                unset($data);
             }
         }
-        $result = substr($result, 0, -1);
 
-        $result.='] 
-        }';
 
-        return ($result);
+        $json->getJson();
     }
 
     /**
@@ -423,6 +432,27 @@ class OpenPayz {
         $columns = array('ID', 'Date', 'Cash', 'Payment ID', 'Real Name', 'Full address', 'Payment system', 'Processed');
         $graphsUrl = wf_Link(self::URL_CHARTS, wf_img('skins/icon_stats.gif', __('Graphs')), false, '');
         show_window(__('OpenPayz transactions') . ' ' . $graphsUrl, wf_JqDtLoader($columns, self::URL_AJAX_SOURCE, false, 'payments', 100, $opts));
+    }
+
+    /**
+     * Renders transaction details
+     * 
+     * @param int $transactionId
+     * 
+     * @return void
+     */
+    public function renderTransactionDetails($transactionId) {
+        $transactionId = vf($transactionId, 3);
+        $result = '';
+        $result.=wf_BackLink('?module=openpayz', '', true);
+        if (isset($this->allTransactions[$transactionId])) {
+            $result.= wf_tag('pre', false, 'floatpanelswide', '') . print_r($this->allTransactions[$transactionId], true) . wf_tag('pre', true);
+            $result.=wf_CleanDiv();
+        } else {
+            $result.=$this->messages->getStyledMessage(__('Non existent transaction ID'), 'error');
+        }
+
+        show_window(__('Transaction') . ': ' . $transactionId, $result);
     }
 
 }

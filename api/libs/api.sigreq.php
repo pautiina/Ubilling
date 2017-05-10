@@ -64,6 +64,7 @@ class SignupRequests {
         $this->loadRequests();
         $result = '';
         $jsonAAData = array();
+        $telepathy = new Telepathy(false, true, true);
 
         //additional comments indicator
         if ($this->altcfg['ADCOMMENTS_ENABLED']) {
@@ -72,6 +73,7 @@ class SignupRequests {
 
         if (!empty($this->requests)) {
             foreach ($this->requests as $io => $eachreq) {
+
                 $jsonItem = array();
                 $jsonItem[] = $eachreq['id'];
                 $jsonItem[] = $eachreq['date'];
@@ -83,8 +85,10 @@ class SignupRequests {
                     $apt = $eachreq['apt'];
                 }
                 $reqaddr = $eachreq['street'] . ' ' . $eachreq['build'] . '/' . $apt;
-                $jsonItem[] = $reqaddr;
+                $loginDetect = $telepathy->getLogin($reqaddr);
 
+                $profileLink = (!empty($loginDetect)) ? ' ' . wf_Link('?module=userprofile&username=' . $loginDetect, web_profile_icon()) : '';
+                $jsonItem[] = $reqaddr . $profileLink;
                 $jsonItem[] = $eachreq['realname'];
 
                 if ($this->altcfg['ADCOMMENTS_ENABLED']) {
@@ -254,7 +258,7 @@ class SignupRequests {
         $result = wf_TableBody($rows, '100%', '0', 'glamour');
 
 
-        $actlinks = wf_Link('?module=sigreq', __('Back'), false, 'ubButton');
+        $actlinks = wf_BackLink('?module=sigreq');
         if ($reqdata['state'] == 0) {
             $actlinks.=wf_Link('?module=sigreq&reqdone=' . $reqid, wf_img_sized('skins/icon_active.gif', '', '10') . ' ' . __('Close'), false, 'ubButton');
         } else {
@@ -454,7 +458,7 @@ class SignupConfig {
         $inputs.= wf_Submit(__('Save'));
 
         $result = wf_Form('', 'POST', $inputs, 'glamour');
-        $result.= wf_Link('?module=sigreq', __('Back'), true, 'ubButton');
+        $result.= wf_BackLink('?module=sigreq');
         return ($result);
     }
 

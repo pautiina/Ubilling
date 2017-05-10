@@ -18,7 +18,7 @@ if (cfr('TARIFFSPEED')) {
         $olddata[5] = $existingspeeds[$tariff]['bursttimedownload'];
         $olddata[6] = $existingspeeds[$tariff]['burstimetupload'];
         show_window(__('Edit speed') . ' ' . $tariff, web_EditorSixStringDataForm($fieldnames, $fieldkeys, $olddata));
-        show_window('', wf_Link("?module=tariffspeeds", 'Back', true, 'ubButton'));
+        show_window('', wf_BackLink("?module=tariffspeeds", 'Back', true, 'ubButton'));
         // if all ok save speed
         if ((isset($_POST['newspeeddown'])) AND ( isset($_POST['newspeedup']))) {
             zb_TariffDeleteSpeed($tariff);
@@ -31,15 +31,14 @@ if (cfr('TARIFFSPEED')) {
             zb_TariffCreateSpeed($tariff, $newSpeedDown, $newSpeedUp, $newBurstDown, $newBurstUp, $newBurstTimeDown,$newBurstTimeUp,$newBurstTimeUp);
             rcms_redirect("?module=tariffspeeds");
         }
-        
     } else {
         //deleting speed
         if (wf_CheckGet(array('deletespeed'))) {
-              zb_TariffDeleteSpeed($_GET['deletespeed']);
-              rcms_redirect("?module=tariffspeeds");
+            zb_TariffDeleteSpeed($_GET['deletespeed']);
+            rcms_redirect("?module=tariffspeeds");
         }
         show_window(__('Tariff speeds'), web_TariffSpeedLister());
-        show_window('', wf_Link('?module=tariffs', __('Back'), false, 'ubButton'));
+        show_window('', wf_BackLink('?module=tariffs'));
     }
 } else {
     show_error(__('You cant control this module'));

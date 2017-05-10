@@ -113,7 +113,7 @@ class StickyNotes {
                 $actLinks.= wf_modalAuto(web_edit_icon(), __('Edit'), $this->editForm($each['id']), '') . ' ';
                 $actLinks.= wf_modal(wf_img('skins/icon_search_small.gif', __('Preview')), __('Preview'), nl2br(strip_tags($each['text'])), '', '640', '480');
                 $cells.= wf_TableCell($actLinks);
-                $rows.= wf_TableRow($cells, 'row3');
+                $rows.= wf_TableRow($cells, 'row5');
             }
         }
 
@@ -400,8 +400,8 @@ class StickyNotes {
                 $result = strip_tags($noteData['text']);
                 $result = nl2br($result);
                 $result.= wf_delimiter(2);
-                $result.= wf_Link('?module=stickynotes', __('Back'), false, 'ubButton');
-                $result.= wf_modal(__('Edit'), __('Edit'), $this->editForm($noteId), 'ubButton', '500', '450') . ' ';
+                $result.= wf_BackLink('?module=stickynotes');
+                $result.= wf_modalAuto(web_edit_icon().' '.__('Edit'), __('Edit'), $this->editForm($noteId), 'ubButton') . ' ';
             } else {
                 $result = __('Access denied');
             }
