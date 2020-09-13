@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Corporate users API
  */
 
@@ -10,8 +10,8 @@
  * @return array
  */
 function cu_GetAllLinkedUsers() {
-    $alterconf = rcms_parse_ini_file(CONFIG_PATH . "alter.ini");
-    $linkcfid = $alterconf['USER_LINKING_CFID'];
+    global $ubillingConfig;
+    $linkcfid = $ubillingConfig->getAlterParam('USER_LINKING_CFID');
     $query = "SELECT `login`,`content` from `cfitems` WHERE `typeid`='" . $linkcfid . "' AND `content` !=''";
     $allusers = simple_queryall($query);
     $result = array();
@@ -30,9 +30,9 @@ function cu_GetAllLinkedUsers() {
  * @return string
  */
 function cu_GetParentUserLogin($param) {
+    global $ubillingConfig;
+    $linkfield = $ubillingConfig->getAlterParam('USER_LINKING_FIELD');
     $param = mysql_real_escape_string($param);
-    $alterconf = rcms_parse_ini_file(CONFIG_PATH . "alter.ini");
-    $linkfield = $alterconf['USER_LINKING_FIELD'];
     $query = "SELECT `login` from `users` WHERE `" . $linkfield . "`='" . $param . "'";
     $result = simple_query($query);
     if (!empty($result)) {
@@ -48,9 +48,9 @@ function cu_GetParentUserLogin($param) {
  * @return array
  */
 function cu_GetAllChildUsers($param) {
+    global $ubillingConfig;
+    $linkcfid = $ubillingConfig->getAlterParam('USER_LINKING_CFID');
     $param = mysql_real_escape_string($param);
-    $alterconf = rcms_parse_ini_file(CONFIG_PATH . "alter.ini");
-    $linkcfid = $alterconf['USER_LINKING_CFID'];
     $query = "SELECT `login` from `cfitems` WHERE `typeid`='" . $linkcfid . "' AND `content`='" . $param . "' ";
     $result = array();
     $alllinks = simple_queryall($query);
@@ -68,17 +68,19 @@ function cu_GetAllChildUsers($param) {
  * @return array
  */
 function cu_GetAllParentUsers() {
-    $alterconf = rcms_parse_ini_file(CONFIG_PATH . "alter.ini");
-    $linkfield = $alterconf['USER_LINKING_FIELD'];
-    $linkcfid = $alterconf['USER_LINKING_CFID'];
+    global $ubillingConfig;
+    $linkfield = $ubillingConfig->getAlterParam('USER_LINKING_FIELD');
+    $linkcfid = $ubillingConfig->getAlterParam('USER_LINKING_CFID');
     $result = array();
-    $query_cfs = "SELECT DISTINCT `content` FROM `cfitems` WHERE `typeid`='" . $linkcfid . "'";
+    $query_cfs = "SELECT DISTINCT `content` FROM `cfitems` WHERE `typeid`='" . $linkcfid . "' AND `content` <> ''";
     $allcfs = simple_queryall($query_cfs);
     if (!empty($allcfs)) {
         foreach ($allcfs as $io => $eachcf) {
             $query_user = "SELECT `login` from `users` WHERE `" . $linkfield . "`='" . $eachcf['content'] . "' ";
             $userlogin = simple_query($query_user);
-            $result[$userlogin['login']] = $eachcf['content'];
+            if (!empty($userlogin) AND ! empty($eachcf['content'])) {
+                $result[$userlogin['login']] = $eachcf['content'];
+            }
         }
     }
     return ($result);
