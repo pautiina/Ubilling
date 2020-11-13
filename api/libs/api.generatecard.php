@@ -42,7 +42,7 @@ class GenerateCard {
                 $row['left'],
                 $row['top'],
                 $imageColor,
-                $this->font,
+                $_SERVER['DOCUMENT_ROOT'] . $this->font,
                 $row['text']
             );
         }
